@@ -1,0 +1,11 @@
+・困ったところ
+使用環境はmysql5.6.28だが、strictモードが有効になっており空白をinsertしようとするとエラーが発生した。
+以下のシェルスクリプトで解決できた。
+SELECT @@GLOBAL.sql_mode;(状況確認)
+SET @@GLOBAL.sql_mode='';(状況変更)
+SELECT @@GLOBAL.sql_mode;(状況再確認)
+
+参照URL
+http://blog.kenjiskywalker.org/blog/2013/04/04/tweets_zip_big_data/
+https://www.seeds-std.co.jp/seedsblog/1035.html
+
