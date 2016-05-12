@@ -1,0 +1,23 @@
+データの登録
+phpmyadminでcsvファイルを読み込ませて登録(pythonではできず)
+作成したテーブルはuser_masterとrestaurant_master、rating_final
+
+仮説
+cashで支払ったお店よりもカードで支払いした(できるお店)の方がservise_rateが高い
+
+検証
+SQL
+SELECT restaurant_payment.Rpayment,AVG(rating) as average FROM rating LEFT JOIN restaurant_payment ON rating.placeID = restaurant_payment.placeID GROUP BY restaurant_payment.Rpayment
+
+結果
+american_express:1.3319148936170213
+bank_debit_cards:1.3461538461538463
+carte_blanche:2
+cash:1.2034058656575213
+checks:1.75
+discover:1.6666666666666667
+mastercard-eurocard:1.2476635514018692
+visa:1.2537960954446854
+
+提案
+cashで支払った場合のservice_rateはいかなるクレジットカードを使用した場合のservice_rateよりも低いのでできる限り多くのクレジットカードを使用可能にした方がよい。
