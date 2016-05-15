@@ -4,7 +4,7 @@ from scipy.cluster.hierarchy import dendrogram, linkage
 from scipy.spatial.distance import pdist
 import matplotlib
 # Force matplotlib to not use any Xwindows backend.
-matplotlib.use('Agg')
+matplotlib.use('Agg') #AggをPDFにすればpngファイルにして保存できる
 import matplotlib.pyplot as plt
 
 
