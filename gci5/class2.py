@@ -1,7 +1,7 @@
 #coding: utf8
 import numpy as np
 import matplotlib
-matplotlib.use("PDF") #ここをAGGにすればpngファイルにして保存できる
+matplotlib.use("PDF") #PDFをAggにすればpngファイルにして保存できる
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 
