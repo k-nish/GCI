@@ -1,4 +1,5 @@
 #coding: UTF-8
+# gensim tutorial:corpora and vector spaces
 import logging
 # ログ活動を見たいときはlogginをimportして以下のコードが必要
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
@@ -23,7 +24,7 @@ print('texts')
 pprint(texts)
 
 dictionary = corpora.Dictionary(texts)
-dictionary.save = ('/var/www/html/gci/gci4/deerwester.dict')
+dictionary.save('/var/www/html/gci/gci4/deerwester.dict')
 print('dictionary')
 print(dictionary)
 
@@ -44,6 +45,67 @@ corpus = [dictionary.doc2bow(text) for text in texts]
 corpora.MmCorpus.serialize('/var/www/html/gci/gci4/deerwester.mm', corpus)
 print 'corpus'
 print(corpus)
+
+# corpusはpythonのリストとして保存される。上の例だとcorpusはメモリに保存されているがcorpusのデータ量が大きくなるとメモリには保存できなくなる。ここでディスク上にcorpusが保存されているとする。さらにcorpusは各単語がスペースで区切られているとする。
+class MyCorpus(object):
+	def __iter__(self):
+		for line in open('mycorpus.txt'):
+			# assume there's one document per line, tokens separated by whitespace
+			yield dictionary.doc2bow(line.lower().split())
+
+corpus_memory_friendly = MyCorpus()
+print corpus_memory_friendly
+
+# corpusの中身を可視化するためにはcorpus_memory_friendlyを一列ずつ表示しなくてはならない
+for vector in corpus_memory_friendly:
+	print (vector)
+
+# すべてのテキストをメモリに読むことなく辞書を作成するコードを記述する
+# すべてのトークンに関するデータを読み込む
+dictionary = corpora.Dictionary(line.lower().split() for line in open('mycorpus.txt'))
+# 最後の言葉、一度しか登場しない単語を消去する
+stop_ids = [dictionary.token2id[stopword] for stopword in stoplist if stopword in dictionary.token2id]
+once_ids = [tokenid for tokenid, docfreq in dictionary.dfs.iteritems() if docfreq == 1]
+dictionary.filter_tokens(stop_ids + once_ids) #最後の言葉、一言しか登場しない単語を消去
+dictionary.compactify() #取り除かれた単語のidも取り除く
+print 'dictionary'
+print dictionary
+
+# 辞書のファイル形式にもいろいろなものがある。ここでは、Market Matrix Formatという有名なファイル形式で保存する方法をあげる
+from gensim import corpora
+# まずは単なるPythonのリストとして2単語の辞書を作る
+corpus = [[(1, 0.5)], []] #ここではなんとなく片方の単語を空にする
+corpora.MmCorpus.serialize('/var/www/html/gci/gci4/corpus.mm', corpus)
+
+# 他の有名なファイル形式Joachim's SVMlight format, Blei's LDA-C format, GibbsLDA++formatへの保存方法は
+# corpora.SvmLightCorpus.serialize('/var/www/html/gci/gci4/corpus.svmlight', corpus)
+# corpora.BleiCorpus.serialize('/var/www/html/gci/gci4/corpus.lda-c', corpus)
+# corpora.LowCorpus.serialize('/var/www/html/gci/gci4/corpus.low', corpus)
+
+# 逆に.mmファイルを読み込むコードは
+corpus = corpora.MmCorpus('/var/www/html/gci/gci4/corpus.mm')
+
+# 辞書の中身を出力する方法 print(corpus)では入っているデータの情報しか出力されず何が入っているかわからない
+# まず1つの方法が
+print 'list(corpus)'
+print list(corpus)
+# もう一つの方法が
+for doc in corpus:
+	print(doc)
+
+# Matrix Market document形式の辞書をBlei's LDA-C formatに保存する形式は
+# corpora.BleiCorpus.serialize('var/www/html/gci/gci4/corpus2.lda-c', corpus)
+
+# gensimにはnumpy matrixと互換性をもつ機能を持っている
+# import gensim
+# corpus = gensim.matutils.Dense2Corpus(numpy_matrix)
+# numpy_matrix = gensim.matutils.corpus2dense(corpus, num_terms=number_of_corpus_features)
+# scipy matrixとの互換するコード
+# corpus = gensim.matutils.Sparse2Corpus(scipy_sparce_matrix)
+# scipy_csc_matrix = gensim.matutils.corpus2csc(corpus)
+
+
+
 
 
 
