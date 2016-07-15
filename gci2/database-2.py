@@ -91,6 +91,36 @@ plt.legend()
 # HH_IDが32896のユーザについて、月ごとの購入数のグラフを作成する
 # ・case文ではなくpythonのfor文にて作成する
 
+# 2005,2006,2007ごとにレコードを取得し行列に追加する
+%matplotlib inline
+import matplotlib.pyplot as plt
+import mysql.connector
+from local_config import mariadb_config
+from contextlib import closing
+mariadb_config['database'] = "gci"
+db = mysql.connector.connect(**mariadb_config)
+year = ["2005", "2006", "2007"]
+month = ["01", "02", "03", "04", "05", "06", "07","08","09","10","11","12","13"]
+X = []
+Y = []
+for a in range(0,len(year)):
+    for b in range(0,len(month)-1):
+        d1 = year[a] + month[b] + "01"
+        d2 = year[a] + month[b+1] + "01"
+        d3 = year[a] + month[b]
+        statement = """select sum(OrderDate >= %s and OrderDate < %s) as %s from Orders where HH_ID = 32896 group by HH_ID;"""
+        with closing(db.cursor()) as cur:
+            cur.execute(statement, (d1, d2, d3))
+            row = cur.fetchone()
+            while row is not None:
+                X.append(d3)
+                Y.append(row)
+                row = cur.fetchone()
+plt.plot(Y)
+plt.show()
+
+# x座標を示す方法を調べよう
+
 
 # 1回の購入金額あたりの分布を作成する
 # ヒストグラム作成はplt.hist()で作成できる。単純にplt.hist()をするとレコード数が多すぎるのでSQLで適当な範囲ごとのレコード数を計算し、プロットしたほうがよい
