@@ -39,9 +39,9 @@ sig_score = log_loss(y_test, sig_clf_probs)
 
 # 時間軸で予想される確率の変化をプロットする
 plt.figure(0)
-colors = ["r", "g", "s"]
+colors = ["r", "g", "b"]
 for i in range(clf_probs.shape[0]):
-	plt.arrows(clf_probs[i, 0], clf_probs[i, 1], sig_clf_probs[i, 0] - clf_probs[i, 0], sig_clf_probs[i, 1] - clf_probs[i, 1], color = colors[y_test[i]], head_width=1e-2)
+	plt.arrow(clf_probs[i, 0], clf_probs[i, 1], sig_clf_probs[i, 0] - clf_probs[i, 0], sig_clf_probs[i, 1] - clf_probs[i, 1], color = colors[y_test[i]], head_width=1e-2)
 
 # 完璧な予測をプロットする
 plt.plot([1.0], [0.0], 'ro', ms=20, label="Class 1")
@@ -52,14 +52,14 @@ plt.plot([0.0], [0.0], 'bo', ms=20, label="Class 3")
 plt.plot([0.0, 1.0, 0.0, 0.0], [0.0, 0.0, 1.0, 0.0], 'k', label="Simplex")
 
 # simplexmのポイントに注釈をつける
-plt.annotate(r'($\frac{1}{3}$, $\frac{1}{3}$, $\frac{1}{3}$)', xy=(1.0/3, 1.0/3), xytext=(1.0/3, .23), xycoords='data', arrowprops=dict(facecolor='black', shrink=0.05), horizontalalignment='center', varticalalignment="center")
+plt.annotate(r'($\frac{1}{3}$, $\frac{1}{3}$, $\frac{1}{3}$)', xy=(1.0/3, 1.0/3), xytext=(1.0/3, .23), xycoords='data', arrowprops=dict(facecolor='black', shrink=0.05), horizontalalignment='center', verticalalignment="center")
 plt.plot([1.0/3], [1.0/3], 'ko', ms=5)
-plt.annotate(r'($\frac{1}{2}$, $0$, $\frac{1}{2}$)', xy=(.5, .0), xytext=(.5, .1), xycoords='data', arrowprops=dict(facecolor='black', shrink=0.05), horizontalalignment='center', varticalalignment="center")
-plt.annotate(r'($0$, $\frac{1}{2}$, $\frac{1}{2}$)', xy=(.0, .5), xytext=(.1, .5), xycoords='data', arrowprops=dict(facecolor='black', shrink=0.05), horizontalalignment='center', varticalalignment="center")
-plt.annotate(r'($\frac{1}{2}$, $\frac{1}{2}$, $0$)', xy=(.5, .5), xytext=(.6, .6), xycoords='data', arrowprops=dict(facecolor='black', shrink=0.05), horizontalalignment='center', varticalalignment="center")
-plt.annotate(r'($0$, $0$, $1$)', xy=(0, 0), xytext=(.1, .1), xycoords='data', arrowprops=dict(facecolor='black', shrink=0.05), horizontalalignment='center', varticalalignment="center")
-plt.annotate(r'($1$, $0$, $0$)', xy=(0, 0), xytext=(.1, .1), xycoords='data', arrowprops=dict(facecolor='black', shrink=0.05), horizontalalignment='center', varticalalignment="center")
-plt.annotate(r'($0$, $1$, $0$)', xy=(0, 1), xytext=(.1, .1), xycoords='data', arrowprops=dict(facecolor='black', shrink=0.05), horizontalalignment='center', varticalalignment="center")
+plt.annotate(r'($\frac{1}{2}$, $0$, $\frac{1}{2}$)', xy=(.5, .0), xytext=(.5, .1), xycoords='data', arrowprops=dict(facecolor='black', shrink=0.05), horizontalalignment='center', verticalalignment="center")
+plt.annotate(r'($0$, $\frac{1}{2}$, $\frac{1}{2}$)', xy=(.0, .5), xytext=(.1, .5), xycoords='data', arrowprops=dict(facecolor='black', shrink=0.05), horizontalalignment='center', verticalalignment="center")
+plt.annotate(r'($\frac{1}{2}$, $\frac{1}{2}$, $0$)', xy=(.5, .5), xytext=(.6, .6), xycoords='data', arrowprops=dict(facecolor='black', shrink=0.05), horizontalalignment='center', verticalalignment="center")
+plt.annotate(r'($0$, $0$, $1$)', xy=(0, 0), xytext=(.1, .1), xycoords='data', arrowprops=dict(facecolor='black', shrink=0.05), horizontalalignment='center', verticalalignment="center")
+plt.annotate(r'($1$, $0$, $0$)', xy=(0, 0), xytext=(.1, .1), xycoords='data', arrowprops=dict(facecolor='black', shrink=0.05), horizontalalignment='center', verticalalignment="center")
+plt.annotate(r'($0$, $1$, $0$)', xy=(0, 1), xytext=(.1, .1), xycoords='data', arrowprops=dict(facecolor='black', shrink=0.05), horizontalalignment='center', verticalalignment="center")
 
 # グリッドを加える
 plt.grid("off")
@@ -89,7 +89,7 @@ p2 = 1 - p0 - p1
 p = np.c_[p0.ravel(), p1.ravel(), p2.ravel()]
 p = p[p[:, 2] >= 0]
 
-calibrated_classifier = sig_clf.calibrated_classifier[0]
+calibrated_classifier = sig_clf.calibrated_classifiers_[0]
 prediction = np.vstack([calibrator.predict(this_p) for calibrator, this_p in zip(calibrated_classifier.calibrators_, p.T)]).T
 prediction /= prediction.sum(axis=1)[:, None]
 
@@ -99,7 +99,7 @@ for i in range(prediction.shape[0]):
 	plt.arrow(p[i, 0], p[i, 1], prediction[i, 0] - p[i, 0], prediction[i, 1] - p[i, 1], head_width=1e-2, color=colors[np.argmax(p[i])])
 
 # plot boundaries of unit simplex
-plt.plot([0.0, 1.0, 0.0, 0.0], [0.0, 0.0, 1.0, 0,0], 'k', label="Simplex")
+plt.plot([0.0, 1.0, 0.0, 0.0], [0.0, 0.0, 1.0, 0.0], 'k', label="Simplex")
 
 plt.grid("off")
 for x in [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]:
@@ -113,7 +113,7 @@ plt.ylabel("Probability class 2")
 plt.xlim(-0.05, 1.05)
 plt.ylim(-0.05, 1.05)
 
-# plt.show()
+plt.show()
 filename = "rfc3class.png"
 plt.savefig(filename)
 
