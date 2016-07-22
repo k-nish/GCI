@@ -119,10 +119,31 @@ for a in range(0,len(year)):
 plt.plot(Y)
 plt.show()
 
-# x座標を示す方法を調べよう
-
+# x座標を示す方法を調べよう!!!
 
 # 1回の購入金額あたりの分布を作成する
 # ヒストグラム作成はplt.hist()で作成できる。単純にplt.hist()をするとレコード数が多すぎるのでSQLで適当な範囲ごとのレコード数を計算し、プロットしたほうがよい
+%matplotlib inline
+import matplotlib.pyplot as plt
+import mysql.connector
+from local_config import mariadb_config
+from contextlib import closing
+mariadb_config['database'] = "gci"
+db = mysql.connector.connect(**mariadb_config)
+
+statement = """
+select Dollars from Orders where 1;
+"""
+
+y = []
+with closing(db.cursor()) as cur:
+    cur.execute(statement)
+    row = cur.fetchone()
+    while row is not None:
+        y.append(int(row[0]))
+        row = cur.fetchone()
+
+_=plt.hist(y,bins=1000)
+plt.show()
 
 
