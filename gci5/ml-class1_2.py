@@ -18,7 +18,7 @@ print a2
 
 # 3.3列目までとそれ以降で分割
 X = A[:,0:3]
-Y = A[:,2:]
+Y = A[:,3:]
 print 'Xの表示'
 print X
 print 'Yの表示'
@@ -35,7 +35,7 @@ print X.shape
 print Y.shape
 
 # 5.Xとyを結合して元の配列と同じ大きさに戻す
-Y = np.reshape(Y,(5,2))
+# Y = np.reshape(Y,(5,1))
 Z = np.hstack((X,Y))
 print 'Zの表示'
 print Z
