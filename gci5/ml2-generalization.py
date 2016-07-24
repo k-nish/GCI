@@ -12,4 +12,3 @@ scalar = StandardScalar()
 standard_X = scalar.fit_transform(X)
 
 print standard_X
-
