@@ -36,7 +36,10 @@ clf.fit(train_X, train_y)
 # prediction
 y_hat = clf.predict(test_X)
 # result
+print '仮説1の検証'
 print y_hat
 print precision_score(test_y, y_hat)
 
 # 精度は0.631728045326となり、Fashionの購買行動しか用いていなかった分析よりも精度が高くついた。すなわち、仮説1が正しいことを示すことができた。
+
+仮説2:スポーツカテゴリの購買行動も用いると精度はさらにあがるのではないだろうか
