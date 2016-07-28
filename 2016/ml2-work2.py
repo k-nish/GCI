@@ -12,7 +12,7 @@ digits = load_digits(n_class=10)
 X, y = digits.data, digits.target
 
 #訓練データとテストデータが8:2になるように分割
-train_X, test_X, train_y, test_y = train_test_split(X, Y, test_size=0.2, random_state=1234)
+train_X, test_X, train_y, test_y = train_test_split(X, y, test_size=0.2, random_state=1234)
 # 学習器を作る
 clf = LogisticRegression()
 # training
@@ -39,7 +39,7 @@ scaler = MinMaxScaler()
 MinMax_X = scaler.fit_transform(X)
 
 #訓練データとテストデータが8:2になるように分割
-train_X2, test_X2, train_y2, test_y2 = train_test_split(MinMax_X, Y, test_size=0.2, random_state=1234)
+train_X2, test_X2, train_y2, test_y2 = train_test_split(MinMax_X, y, test_size=0.2, random_state=1234)
 # 学習器を作る
 lr = LogisticRegression()
 # training
