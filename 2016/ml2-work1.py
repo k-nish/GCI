@@ -9,9 +9,9 @@ import numpy as np
 
 # column取得
 data = pd.read_csv('gci_Feature_user1000.csv')
-# columns = data.columns
-# print 'columns取得'
-# print(columns)
+columns = data.columns
+print 'columns取得'
+print columns
 
 columns = data.columns
 for col in columns:
@@ -21,8 +21,8 @@ for col in columns:
 	if 'Fashion' not in col_list and 'Miscellaneous' not in col_list:
 		columns = columns.drop(col)
 
-# print 'columns'
-# print columns
+print 'columns'
+print columns
 
 data = data.ix[:,columns]
 
@@ -42,4 +42,32 @@ print precision_score(test_y, y_hat)
 
 # 精度は0.631728045326となり、Fashionの購買行動しか用いていなかった分析よりも精度が高くついた。すなわち、仮説1が正しいことを示すことができた。
 
-仮説2:スポーツカテゴリの購買行動も用いると精度はさらにあがるのではないだろうか
+# 仮説2:スポーツカテゴリの購買行動も用いると精度はさらにあがるのではないだろうか
+d = pd.read_csv('gci_Feature_user1000.csv')
+colu = d.columns
+for co in colu:
+	co_list = co.split('_')
+	if 'Fashion' not in co_list and 'Miscellaneous' not in co_list and 'Travel' not in co_list:
+		colu = colu.drop(co)
+
+print 'colu'
+print colu
+
+datas = d.ix[:,colu]
+
+a = datas.ix[:,'PA_Fashion_1month_ago': 'PA_Miscellaneous_6month_ago']
+# b = data.ix[:,'Is_PA_Fashion']
+b = datas.ix[:,'Is_PA_Fashion']
+train_a, test_a, train_b, test_b = train_test_split(a, b, test_size=0.2, random_state=1234)
+rfc = RandomForestClassifier(random_state =1234)
+# training
+rfc.fit(train_a, train_b)
+# prediction
+b_hat = rfc.predict(test_a)
+# result
+print '仮説2の検証'
+print b_hat
+print precision_score(test_b, b_hat)
+
+# 精度は0.635228848821となり仮説2は正しいことがわかった
+# Miscellaneousを外した場合は0.638台になった
