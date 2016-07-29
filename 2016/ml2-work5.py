@@ -9,7 +9,9 @@ iris = load_iris()
 X, y = iris.data, iris.target
 
 skf = StratifiedKFold(y, n_folds=3)
+# 予測精度を要素とするnumpy配列を宣言
 ans = np.array([])
+# cross_validationを行う
 for train_index, test_index in skf:
     train_X,test_X = X[train_index], X[test_index]
     train_y,test_y = y[train_index], y[test_index]
@@ -24,6 +26,7 @@ for train_index, test_index in skf:
     # 予測をnumpy配列に入れる
     ans = np.append(ans, prediction)
 
+# 結果の出力
 print 'ans'
 print ans
 print 'ans.mean()'
