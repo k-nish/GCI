@@ -44,5 +44,5 @@ for i in range(0,8):
 # print ans_feature
 # print ans_estimators
 print ans
-# 最もよいパラメータはfeature=0.8 esitimators = 5
+# 最もよいパラメータはfeature=0.8 esitimators = 5←間違いの模様
 # predictionがすべて1になっているので評価できず。。。
