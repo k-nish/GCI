@@ -126,24 +126,41 @@ plt.show()
 %matplotlib inline
 import matplotlib.pyplot as plt
 import mysql.connector
+import numpy as np
 from local_config import mariadb_config
 from contextlib import closing
 mariadb_config['database'] = "gci"
 db = mysql.connector.connect(**mariadb_config)
 
-statement = """
-select Dollars from Orders where 1;
-"""
+statement = """select Dollars from Orders where 1;"""
 
-y = []
+x = []
 with closing(db.cursor()) as cur:
     cur.execute(statement)
     row = cur.fetchone()
     while row is not None:
-        y.append(int(row[0]))
+        x.append(int(row[0]))
         row = cur.fetchone()
 
-_=plt.hist(y,bins=1000)
-plt.show()
+sql = """select count(*) from Orders where 1;"""
+cursor = db.cursor()
+cursor.execute(sql)
+totalnum = cursor.fetchone()[0]
 
+y=np.array([])
+skipnum = 100
+endnum = totalnum / skipnum
+for i in range(0,endnum-2):
+	x2 = np.array(x[i*100:(i+1)*100 - 1])
+	y = np.append(y, np.average(x2))
 
+x3 = np.array(x[(endnum-1) * 100:])
+y = np.append(y, np.average(x3))
+
+print x
+print y
+
+# _=plt.hist(y,bins=500)
+# plt.ylabel('Dollars')
+# # plt.xlim(-1000,10000)
+# plt.show()
