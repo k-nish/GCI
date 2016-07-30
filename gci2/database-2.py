@@ -160,7 +160,6 @@ y = np.append(y, np.average(x3))
 print x
 print y
 
-# _=plt.hist(y,bins=500)
-# plt.ylabel('Dollars')
-# # plt.xlim(-1000,10000)
-# plt.show()
+_=plt.hist(y,bins=50)
+plt.ylabel('Dollars')
+plt.show()
