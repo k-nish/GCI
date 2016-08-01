@@ -36,13 +36,13 @@ for i in range(0,8):
 	# 最も正確な時のパラメータを答えとする
 	if prediction > max_predition:
 		ans.append([param_grid[i]['max_features'], param_grid[i]['n_estimators'], prediction])
-		# ans = np.append(ans, [param_grid[i]['max_features'], param_grid[i]['n_estimators'], prediction])
-		# ans_feature = param_grid[i]['max_features']
-		# ans_estimators = param_grid[i]['n_estimators']
-		# max_predition = prediction
 
-# print ans_feature
-# print ans_estimators
-print ans
+# numpy配列に変換
+answer = np.array(ans)
+# 精度が最大になるindexを取得
+ans_i = np.argmax(answer, axis = 0)[2]
+# 求めるパラメータの出力
+print u"精度が最大になるmax_featuresは" + str(answer[ans_i][0])
+print u"精度が最大になるn_estimatorsは" + str(answer[ans_i][1])
 # 最もよいパラメータはfeature=0.8 esitimators = 5←間違いの模様
 # predictionがすべて1になっているので評価できず。。。
