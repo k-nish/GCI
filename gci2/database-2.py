@@ -37,7 +37,7 @@ db.close()
 # ZIPDescriptionテーブルから州名降順に10個レコードを取ってきてprintする
 db = mysql.connector.connect(**mariadb_config)
 with closing(db.cursor()) as cur:
-	cur.execute("select ZIPCode, state from ZIPDescription order by state desc limit 10")
+	cur.execute("select distinct state from ZIPDescription order by state limit 10")
 	row = cur.fetchone()
 	print row
 	while  row is not None:
