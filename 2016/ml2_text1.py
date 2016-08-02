@@ -182,3 +182,36 @@ params = {'n_estimators': range(5,8), 'max_features':[0.8, 0.9, 1.0]}
 param_grid = ParameterGrid(params)
 # 探索したいパラメータのすべての組み合わせが得られている
 print list(param_grid)
+
+# cross_validationを行ってgridsearchを行う
+# cross_validationを使ってgridsearchをする場合はGridSearchCVが使える
+
+from sklearn.cross_validation import StratifiedKFold
+from sklearn.grid_search import GridSearchCV
+
+iris = load_iris()
+X,y = iris.data, iris.target
+
+params = {'C':[0.01, 0.1, 1.0, 10], 'penalty':['l1','l2']}
+lr = LogisticRegression()
+clf = GridSearchCV(lr, params)
+
+skf = StratifiedKFold(y, n_folds=3)
+for train_index, test_index in skf:
+	train_X, testX = X[train_index], X[test_index]
+	train_y, test_y = y[train_index], y[test_index]
+
+# fitするとcross_validationの結果が最もよいパラメータがセットされた予測器を返す
+clf.fit(train_X, train_y)
+# 予測
+clf.predict(test_X)
+
+# ベストの結果が出たパラメータ
+print clf.best_params_
+# ベストスコア
+print clf.best_score_
+
+
+
+
+
