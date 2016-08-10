@@ -16,7 +16,7 @@ print "table作成"
 
 csv_data = csvkit.reader(file('rating_final.csv'))
 for row in csv_data:
-	sql = ("INSERT INTO `rating`(`userID`, `placeID`, `rating`, `food_rating`, `service_rating`) VALUES (%s,%s,%s,%s,%s)")
+	sql = "INSERT INTO `rating`(`userID`, `placeID`, `rating`, `food_rating`, `service_rating`) VALUES (%s,%s,%s,%s,%s)"
 	dbcur.execute(sql, row)
 
 #実際にMySQLに反映させる
