@@ -14,7 +14,7 @@ sql2 = "create table rating (userID text, placeID int, rating int, food_rating i
 dbcur.execute(sql2);
 print "table作成"
 
-csv_data = csvkit.reader(file('rating_final.csv'))
+csv_data = csvkit.reader(file('/Users/K/dropbox/RCdata/rating_final.csv'))
 for row in csv_data:
 	sql = "INSERT INTO `rating`(`userID`, `placeID`, `rating`, `food_rating`, `service_rating`) VALUES (%s,%s,%s,%s,%s)"
 	dbcur.execute(sql, row)
